@@ -86,5 +86,27 @@ namespace Portfolio_APIs.Services
             int result = await _ICreativeWorksRepo.SubmitCreativeWorksInfoAsync(creativeWorksEntity);
             return result;
         }
+
+        public async Task<List<VMCreativeWork?>> GetCreativeWork(int? workCategoryId, int userId)
+        {
+            var creativeWorks = await _ICreativeWorksRepo.GetCreativeWork(workCategoryId, userId);
+
+            if (creativeWorks == null || creativeWorks.Count == 0)
+                return new List<VMCreativeWork>();
+
+            // Map Entity → ViewModel (same style as GetAllUsers)
+            var creativeWorksVMs = creativeWorks.Select(e => new VMCreativeWork
+            {
+                Id = e.Id,
+                Title = e.Title,
+                Description = e.Description,
+                Tags = e.Tags,
+                ImageURL = e.ImageURL,
+                WorkCategoryId = e.WorkCategoryId,
+                UserId = e.UserId  
+            }).ToList();
+
+            return creativeWorksVMs;
+        }
     }
 }

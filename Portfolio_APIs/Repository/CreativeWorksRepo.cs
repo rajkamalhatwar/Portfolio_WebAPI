@@ -197,5 +197,39 @@ namespace Portfolio_APIs.Repository
             }
         }
 
+        public async Task<List<CreativeWorksEntity?>> GetCreativeWork(int? workCategoryId, int userId)
+        {
+            List<CreativeWorksEntity> creativeWorksEntityList = new List<CreativeWorksEntity>();
+
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@UserId", SqlDbType.Int) { Value = userId },
+                new SqlParameter("@WorkCategoryId", SqlDbType.Int) {Value = workCategoryId}
+            };
+
+            using (DataSet ds = objSqlHelper.ExecuteDataSetSP(
+                "[dbo].[sp_GetCreativeWork]",
+                parameters))
+            {
+                if (ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+                    return creativeWorksEntityList;
+
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    creativeWorksEntityList.Add(new CreativeWorksEntity
+                    {
+                        Id = Convert.ToInt32(row["Id"]),
+                        Title = row["Title"].ToString()!,
+                        Description = row["Description"].ToString()!,
+                        Tags = row["Tags"].ToString()!,
+                        ImageURL = row["ImageURL"].ToString()!,
+                        WorkCategoryId = Convert.ToInt32(row["WorkCategoryId"]), 
+                        UserId = Convert.ToInt32(row["UserId"])
+                    });
+                }
+            }
+
+            return creativeWorksEntityList;
+        }
     }
 }

@@ -123,5 +123,18 @@ namespace Portfolio_APIs.Controllers
                 });
             }
         }
+
+        [HttpGet("GetCreativeWork")]
+        public async Task<IActionResult> GetCreativeWork([FromQuery] int? workCategoryId = null)
+        {
+            int userId = Convert.ToInt32(User.FindFirst("userId")?.Value);
+
+            var result = await _ICreativeWorksService.GetCreativeWork(workCategoryId, userId);
+
+            if (result == null)
+                return NotFound(new { Message = "Creative Work record not found." });
+
+            return Ok(result);
+        }
     }
 }
