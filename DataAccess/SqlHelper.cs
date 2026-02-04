@@ -24,22 +24,28 @@ namespace DataAccess
 
         }
 
-        public string Getcon()
+        //public string Getcon()
+        //{
+        //    var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+        //    IConfiguration _configuration = builder.Build();
+
+
+        //    string connectionstring = _configuration.GetValue<string>("ConnectionStrings:MainConnectionstring");
+        //    //   string connectionstring = "Data Source=40.80.85.212;Initial Catalog=db_RFCoreMvcTest;User ID=db_RFCoreMvcTest;Password=12dveergsd@#bfdg;";
+        //    return connectionstring;
+
+
+        //    //return "Data Source=172.16.0.12;Initial Catalog=DEV_DB_ONLINEREG;User ID=ONLINEREG;Password=Ok$bul9vhern!0zt;";
+        //}
+
+        private string Getcon()
         {
-            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            IConfiguration _configuration = builder.Build();
+            if (string.IsNullOrWhiteSpace(_constr))
+                throw new Exception("Connection string is not initialized.");
 
-
-            string connectionstring = _configuration.GetValue<string>("ConnectionStrings:MainConnectionstring");
-            //   string connectionstring = "Data Source=40.80.85.212;Initial Catalog=db_RFCoreMvcTest;User ID=db_RFCoreMvcTest;Password=12dveergsd@#bfdg;";
-            return connectionstring;
-
-
-            //return "Data Source=172.16.0.12;Initial Catalog=DEV_DB_ONLINEREG;User ID=ONLINEREG;Password=Ok$bul9vhern!0zt;";
+            return _constr;
         }
 
-
- 
 
         public object ExecuteNonQuerySP(String query, SqlParameter[] parameters, bool flag)
         {

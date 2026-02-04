@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using DataAccess;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio_APIs.Interfaces;
 using Portfolio_APIs.Repository;
@@ -9,7 +10,7 @@ using ProjectAPI.Repository;
 using ProjectAPI.ServiceInterfaces;
 using ProjectAPI.Services;
 using System.Text;
-
+using DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -99,6 +100,18 @@ builder.Services.AddAuthentication(options =>
 // 2. Add Authorization
 builder.Services.AddAuthorization();
 
+
+
+builder.Services.AddSingleton<SqlHelper>(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var connStr = config.GetConnectionString("MainConnectionstring");
+
+    if (string.IsNullOrWhiteSpace(connStr))
+        throw new Exception("Connection string is missing.");
+
+    return new SqlHelper(connStr);
+});
 
 
 var app = builder.Build();
