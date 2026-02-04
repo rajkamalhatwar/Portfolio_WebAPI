@@ -1,24 +1,26 @@
-﻿ # -------- Build stage --------
+﻿# -------- Build stage --------
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /app
+WORKDIR /src
 
-# Copy csproj and restore
-COPY *.csproj ./
-RUN dotnet restore
+# Copy csproj files
+COPY Portfolio_APIs/Portfolio_APIs.csproj Portfolio_APIs/
+COPY DataAccess/DataAccess.csproj DataAccess/
 
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o /out
+# Restore dependencies
+RUN dotnet restore Portfolio_APIs/Portfolio_APIs.csproj
+
+# Copy everything else
+COPY . .
+
+# Publish
+RUN dotnet publish Portfolio_APIs/Portfolio_APIs.csproj -c Release -o /out
 
 # -------- Runtime stage --------
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 
-# Copy published output
 COPY --from=build /out .
 
-# Render provides PORT automatically
 ENV ASPNETCORE_URLS=http://+:$PORT
 
-# 👇 CHANGE DLL NAME IF NEEDED
 ENTRYPOINT ["dotnet", "Portfolio_APIs.dll"]
