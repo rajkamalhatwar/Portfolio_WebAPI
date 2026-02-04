@@ -28,16 +28,16 @@ namespace ProjectAPI.Controllers
 
             if (response.Success)
             {
-                var token = response.Token;
+                //var token = response.Token;
 
-                // Set token as HttpOnly Cookie
-                Response.Cookies.Append("jwt", token, new CookieOptions
-                { 
-                    HttpOnly = false,   // JS can't read it
-                    Secure = false,     // only HTTPS    on production it will be true
-                    SameSite = SameSiteMode.Strict, // prevents CSRF for production 
-                    Expires = DateTime.UtcNow.AddHours(1) // match token expiry
-                });
+                //// Set token as HttpOnly Cookie
+                //Response.Cookies.Append("jwt", token, new CookieOptions
+                //{ 
+                //    HttpOnly = false,   // JS can't read it
+                //    Secure = false,     // only HTTPS    on production it will be true
+                //    SameSite = SameSiteMode.Strict, // prevents CSRF for production 
+                //    Expires = DateTime.UtcNow.AddHours(1) // match token expiry
+                //});
                 return Ok(response);
             }
             else
@@ -46,20 +46,20 @@ namespace ProjectAPI.Controllers
             }
         }
 
-        [HttpPost("logout")]
-        public IActionResult Logout()
-        {
-            // Remove cookie by overwriting with expired one
-            Response.Cookies.Append("jwt", "", new CookieOptions
-            {
-                Expires = DateTime.UtcNow.AddDays(-1), // expire immediately
-                HttpOnly = false,
-                Secure = false, // true in production
-                SameSite = SameSiteMode.Strict
-            });
+        //[HttpPost("logout")]
+        //public IActionResult Logout()
+        //{
+        //    // Remove cookie by overwriting with expired one
+        //    Response.Cookies.Append("jwt", "", new CookieOptions
+        //    {
+        //        Expires = DateTime.UtcNow.AddDays(-1), // expire immediately
+        //        HttpOnly = false,
+        //        Secure = false, // true in production
+        //        SameSite = SameSiteMode.Strict
+        //    });
 
-            return Ok(new { Success = true, Message = "Logged out successfully." });
-        }
+        //    return Ok(new { Success = true, Message = "Logged out successfully." });
+        //}
 
     }
 }
