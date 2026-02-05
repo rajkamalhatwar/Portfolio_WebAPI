@@ -9,8 +9,7 @@ using ProjectAPI.Interfaces;
 using ProjectAPI.Repository;
 using ProjectAPI.ServiceInterfaces;
 using ProjectAPI.Services;
-using System.Text;
-using DataAccess;
+using System.Text; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -98,20 +97,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 // 2. Add Authorization
-builder.Services.AddAuthorization();
-
-
-
-builder.Services.AddSingleton<SqlHelper>(sp =>
-{
-    var config = sp.GetRequiredService<IConfiguration>();
-    var connStr = config.GetConnectionString("MainConnectionstring");
-
-    if (string.IsNullOrWhiteSpace(connStr))
-        throw new Exception("Connection string is missing.");
-
-    return new SqlHelper(connStr);
-});
+builder.Services.AddAuthorization(); 
 
 
 var app = builder.Build();

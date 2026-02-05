@@ -13,8 +13,7 @@ namespace DataAccess
     public  class SqlHelper
     {
 
-        private string _constr = string.Empty;      //connection string
-
+        private string _constr = string.Empty;      //connection string 
         public SqlHelper(string connectionstring)
         {
             _constr = connectionstring;
@@ -24,27 +23,20 @@ namespace DataAccess
 
         }
 
-        //public string Getcon()
-        //{
-        //    var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-        //    IConfiguration _configuration = builder.Build();
-
-
-        //    string connectionstring = _configuration.GetValue<string>("ConnectionStrings:MainConnectionstring");
-        //    //   string connectionstring = "Data Source=40.80.85.212;Initial Catalog=db_RFCoreMvcTest;User ID=db_RFCoreMvcTest;Password=12dveergsd@#bfdg;";
-        //    return connectionstring;
-
-
-        //    //return "Data Source=172.16.0.12;Initial Catalog=DEV_DB_ONLINEREG;User ID=ONLINEREG;Password=Ok$bul9vhern!0zt;";
-        //}
-
-        private string Getcon()
+        public string Getcon()
         {
-            if (string.IsNullOrWhiteSpace(_constr))
-                throw new Exception("Connection string is not initialized.");
+            //var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            //IConfiguration _configuration = builder.Build();
 
-            return _constr;
+
+            //string connectionstring = _configuration.GetValue<string>("ConnectionStrings:MainConnectionstring");
+            string connectionstring = "Data Source=DB_PROJECTAPI.mssql.somee.com;Initial Catalog=DB_PROJECTAPI;User ID=rajkamalhatwar_SQLLogin_1;Password=emfoeilvxr;";
+            return connectionstring;
+
+
+            //return "Data Source=172.16.0.12;Initial Catalog=DEV_DB_ONLINEREG;User ID=ONLINEREG;Password=Ok$bul9vhern!0zt;";
         }
+
 
 
         public object ExecuteNonQuerySP(String query, SqlParameter[] parameters, bool flag)
