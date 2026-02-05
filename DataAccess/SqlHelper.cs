@@ -30,7 +30,7 @@ namespace DataAccess
 
 
             //string connectionstring = _configuration.GetValue<string>("ConnectionStrings:MainConnectionstring");
-            string connectionstring = "Data Source=DB_PROJECTAPI.mssql.somee.com;Initial Catalog=DB_PROJECTAPI;User ID=rajkamalhatwar_SQLLogin_1;Password=emfoeilvxr;";
+            string connectionstring = "Data Source=DB_PROJECTAPI.mssql.somee.com;Initial Catalog=DB_PROJECTAPI;User ID=rajkamalhatwar_SQLLogin_1;Password=rajkamaldb024;";
             return connectionstring;
 
 
