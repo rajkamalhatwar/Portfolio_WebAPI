@@ -10,5 +10,6 @@ namespace Portfolio_APIs.Interfaces
 
         Task<int> SubmitCreativeWorksInfoAsync(CreativeWorksEntity creativeWorksEntity);
         Task<List<CreativeWorksEntity?>> GetCreativeWork(int? workCategoryId, int userId);
+        Task<int> DeleteCreativeWorkById(int creativeWorkId, int userId);
     }
 }

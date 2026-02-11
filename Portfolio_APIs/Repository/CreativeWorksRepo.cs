@@ -231,5 +231,38 @@ namespace Portfolio_APIs.Repository
 
             return creativeWorksEntityList;
         }
+
+        public async Task<int> DeleteCreativeWorkById(int creativeWorkId, int userId)
+        {
+            object ret;
+            try
+            {
+
+                SqlParameter[] objParams = new SqlParameter[3];
+
+                objParams[0] = new SqlParameter("@CreativeWorkId", SqlDbType.Int)
+                {
+                    Value = creativeWorkId
+                };
+
+                objParams[1] = new SqlParameter("@UserId", SqlDbType.Int)
+                {
+                    Value = userId
+                };
+
+                objParams[2] = new SqlParameter("@Res", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+
+                ret = objSqlHelper.ExecuteNonQuerySP("sp_DeleteCreativeWorkById", objParams, true);
+
+                return ret == null ? -99 : Convert.ToInt32(ret);
+            }
+            catch (Exception)
+            {
+                return -99;
+            }
+        }
     }
 }

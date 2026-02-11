@@ -108,5 +108,11 @@ namespace Portfolio_APIs.Services
 
             return creativeWorksVMs;
         }
+
+        public async Task<int> DeleteCreativeWorkById(int creativeWorkId, int userId)
+        {
+            int result = await _ICreativeWorksRepo.DeleteCreativeWorkById(creativeWorkId, userId);
+            return await Task.FromResult(result);
+        }
     }
 }

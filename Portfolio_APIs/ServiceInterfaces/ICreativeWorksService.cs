@@ -11,5 +11,6 @@ namespace Portfolio_APIs.ServiceInterfaces
 
         Task<int> SubmitCreativeWorksInfoAsync(VMCreativeWork vMCreativeWork);
         Task<List<VMCreativeWork?>> GetCreativeWork(int? workCategoryId, int userId);
+        Task<int> DeleteCreativeWorkById(int creativeWorkId, int userId);
     }
 }
