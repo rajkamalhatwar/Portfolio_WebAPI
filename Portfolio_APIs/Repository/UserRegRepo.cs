@@ -68,13 +68,13 @@ namespace ProjectAPI.Repository
             try
             {
                 // Prepare parameters matching your SP
-                SqlParameter[] objParams = new SqlParameter[19]; // Adjust size for all SP params
+                SqlParameter[] objParams = new SqlParameter[21]; // Adjust size for all SP params
 
                 objParams[0] = new SqlParameter("@UserId", SqlDbType.Int) { Value = userRegEntity.UserId ?? 0 };
                 objParams[1] = new SqlParameter("@UserName", SqlDbType.NVarChar, 300) { Value = (object?)userRegEntity.UserName ?? DBNull.Value };
                 objParams[2] = new SqlParameter("@Email", SqlDbType.NVarChar, 300) { Value = (object?)userRegEntity.Email ?? DBNull.Value };
                 objParams[3] = new SqlParameter("@MobileNo", SqlDbType.NVarChar, 15) { Value = (object?)userRegEntity.MobileNo ?? DBNull.Value };
-                objParams[4] = new SqlParameter("@Password", SqlDbType.NVarChar, -1) { Value = (object?)userRegEntity.Password ?? DBNull.Value };
+                objParams[4] = new SqlParameter("@Password", SqlDbType.NVarChar, -1) { Value = (object?)userRegEntity.MobileNo ?? DBNull.Value };
                 objParams[5] = new SqlParameter("@Designations", SqlDbType.NVarChar, 150) { Value = (object?)userRegEntity.Designations ?? DBNull.Value };
                 objParams[6] = new SqlParameter("@HeroLine", SqlDbType.NVarChar, 255) { Value = (object?)userRegEntity.HeroLine ?? DBNull.Value };
                 objParams[7] = new SqlParameter("@ShortAbout", SqlDbType.NVarChar, 500) { Value = (object?)userRegEntity.ShortAbout ?? DBNull.Value };
@@ -88,8 +88,10 @@ namespace ProjectAPI.Repository
                 objParams[15] = new SqlParameter("@GitHubLink", SqlDbType.NVarChar, 255) { Value = (object?)userRegEntity.GitHubLink ?? DBNull.Value };
                 objParams[16] = new SqlParameter("@InstagramLink", SqlDbType.NVarChar, 255) { Value = (object?)userRegEntity.InstagramLink ?? DBNull.Value };
                 objParams[17] = new SqlParameter("@BehanceLink", SqlDbType.NVarChar, 255) { Value = (object?)userRegEntity.BehanceLink ?? DBNull.Value };
-                objParams[18] = new SqlParameter("@Res", SqlDbType.Int);
-                objParams[18].Direction = ParameterDirection.Output;  
+                objParams[18] = new SqlParameter("@PhotoUrl", SqlDbType.NVarChar, 300) { Value = (object?)userRegEntity.PhotoUrl ?? DBNull.Value };
+                objParams[19] = new SqlParameter("@PhotoRelativeUrl", SqlDbType.NVarChar, 500) { Value = (object?)userRegEntity.PhotoRelativeUrl ?? DBNull.Value };
+                objParams[20] = new SqlParameter("@Res", SqlDbType.Int);
+                objParams[20].Direction = ParameterDirection.Output;  
 
                 ret = objSqlHelper.ExecuteNonQuerySP("[dbo].[sp_InsertOrUpdateUser]", objParams, true);
 

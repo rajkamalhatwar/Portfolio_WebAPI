@@ -23,6 +23,7 @@
         public DateTime? CreatedDate { get; set; }
         public bool? IsActive { get; set; } 
         public string? PhotoUrl { get; set; }
+        public string? PhotoRelativeUrl { get; set; }
     }
 
     public class UserRegOperationsEntity

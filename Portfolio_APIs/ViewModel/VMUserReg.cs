@@ -25,6 +25,8 @@ namespace ProjectAPI.ViewModel
         public DateTime? CreatedDate { get; set; }
         public bool? IsActive { get; set; }
         public string? PhotoUrl { get; set; }
+        public string? PhotoRelativeUrl { get; set; }
+        public IFormFile? FormFile { get; set; }
     }
 
     public class VMUserRegOperations

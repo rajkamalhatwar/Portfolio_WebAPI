@@ -1,4 +1,6 @@
-﻿using ProjectAPI.Entity;
+﻿using Portfolio_APIs.ServiceInterfaces;
+using Portfolio_APIs.ViewModel;
+using ProjectAPI.Entity;
 using ProjectAPI.Interfaces;
 using ProjectAPI.Repository;
 using ProjectAPI.ServiceInterfaces;
@@ -10,9 +12,11 @@ namespace ProjectAPI.Services
     public class UserRegService : IUserRegService
     {
         private readonly IUserReg  _IUserReg;
-        public UserRegService(IUserReg  iUserReg)
+        private readonly IBlobStorageService _IBlobStorageService;
+        public UserRegService(IUserReg  iUserReg, IBlobStorageService iBlobStorageService)
         {
             _IUserReg = iUserReg;
+            _IBlobStorageService = iBlobStorageService;
         }
 
         public async Task<List<VMUserReg>> GetAllUsers()
@@ -88,6 +92,21 @@ namespace ProjectAPI.Services
 
         public async Task<long> SaveUser(VMUserReg vMUserReg)
         {
+            string? relativePath = vMUserReg.PhotoRelativeUrl;
+            string? fullImageUrl = vMUserReg.PhotoUrl;
+
+            // ✅ Upload only if new file is provided
+            if (vMUserReg.FormFile != null)
+            {
+                var uploadResult = await _IBlobStorageService.UploadAsync(
+                    vMUserReg.FormFile,
+                    "user-photo-images"
+                );
+
+                relativePath = uploadResult.RelativePath; // store in DB
+                fullImageUrl = uploadResult.FullUrl;       // return if needed
+            }
+
             UserRegEntity userRegEntity = new UserRegEntity
             {
                 UserId = vMUserReg.UserId,
@@ -108,7 +127,10 @@ namespace ProjectAPI.Services
                 GitHubLink = vMUserReg.GitHubLink,
                 InstagramLink = vMUserReg.InstagramLink,
                 BehanceLink = vMUserReg.BehanceLink, 
-                IsActive = vMUserReg.IsActive
+                IsActive = vMUserReg.IsActive,
+                PhotoUrl = fullImageUrl,
+                PhotoRelativeUrl = relativePath
+
             };
 
             // Call the repository method

@@ -21,7 +21,8 @@ namespace ProjectAPI.Controllers
 
         [HttpPost]
         [Route("SaveUser")]
-        public async Task<IActionResult> SaveUser([FromBody] VMUserReg vMUserReg)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> SaveUser([FromForm] VMUserReg vMUserReg)
         {
             if (!ModelState.IsValid)
             {
