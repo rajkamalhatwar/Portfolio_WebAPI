@@ -8,8 +8,7 @@ using Portfolio_APIs.ViewModel;
 namespace Portfolio_APIs.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    [Authorize]
+    [ApiController] 
     public class ProjectController : ControllerBase
     {
         IProjectService _IProjectService;
@@ -20,6 +19,7 @@ namespace Portfolio_APIs.Controllers
 
         [HttpPost]
         [Route("SaveProjectInfo")]
+        [Authorize]
         public async Task<IActionResult> SaveProjectInfo([FromBody] VMProject vMProject)
         {
             if (!ModelState.IsValid)
@@ -52,11 +52,27 @@ namespace Portfolio_APIs.Controllers
         }
 
         [HttpGet("GetProjects")]
-        public async Task<IActionResult> GetProjectById([FromQuery] int? projectId = null)
+        public async Task<IActionResult> GetProjectById([FromQuery] int? projectId = null, [FromQuery] int? userId = null)
         {
-            int userId = Convert.ToInt32(User.FindFirst("userId")?.Value);
+            int finalUserId;
 
-            var result = await _IProjectService.GetProjectByIdAsync(projectId, userId);
+            // Case 1: Authorized request → get userId from JWT
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                finalUserId = Convert.ToInt32(User.FindFirst("userId")?.Value);
+            }
+            // Case 2: Unauthorized request → get userId from query param
+            else if (userId.HasValue)
+            {
+                finalUserId = userId.Value;
+            }
+            // Case 3: Neither JWT nor userId provided
+            else
+            {
+                return BadRequest(new { Message = "userId is required." });
+            }
+
+            var result = await _IProjectService.GetProjectByIdAsync(projectId, finalUserId);
 
             if (result == null)
                 return NotFound(new { Message = "Projects record not found." });
@@ -67,6 +83,7 @@ namespace Portfolio_APIs.Controllers
 
         [HttpPost]
         [Route("DeleteProject")]
+        [Authorize]
         public async Task<IActionResult> DeleteProject([FromQuery] int projectId)
         {
             try

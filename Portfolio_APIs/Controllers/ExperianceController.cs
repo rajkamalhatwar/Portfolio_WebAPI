@@ -8,8 +8,7 @@ using Portfolio_APIs.ViewModel;
 namespace Portfolio_APIs.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    [Authorize]
+    [ApiController] 
     public class ExperianceController : ControllerBase
     {
         IExperianceService _IExperianceService;
@@ -20,6 +19,7 @@ namespace Portfolio_APIs.Controllers
 
         [HttpPost]
         [Route("SaveExperianceInfo")]
+        [Authorize]
         public async Task<IActionResult> SaveExperianceInfo([FromBody] VMExperiance vMExperiance)
         {
             if (!ModelState.IsValid)
@@ -52,11 +52,27 @@ namespace Portfolio_APIs.Controllers
         }
 
         [HttpGet("GetExperiance")]
-        public async Task<IActionResult> GetEducationById([FromQuery] int? experianceId = null)
+        public async Task<IActionResult> GetEducationById([FromQuery] int? experianceId = null, [FromQuery] int? userId = null)
         {
-            int userId = Convert.ToInt32(User.FindFirst("userId")?.Value);
+            int finalUserId;
 
-            var result = await _IExperianceService.GetExperianceByIdAsync(experianceId, userId);
+            // Case 1: Authorized request → get userId from JWT
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                finalUserId = Convert.ToInt32(User.FindFirst("userId")?.Value);
+            }
+            // Case 2: Unauthorized request → get userId from query param
+            else if (userId.HasValue)
+            {
+                finalUserId = userId.Value;
+            }
+            // Case 3: Neither JWT nor userId provided
+            else
+            {
+                return BadRequest(new { Message = "userId is required." });
+            }
+
+            var result = await _IExperianceService.GetExperianceByIdAsync(experianceId, finalUserId);
 
             if (result == null)
                 return NotFound(new { Message = "Experiance record not found." });
@@ -65,6 +81,7 @@ namespace Portfolio_APIs.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("DeleteExperience")]
         public async Task<IActionResult> DeleteEducation([FromQuery] int experianceId)
         {

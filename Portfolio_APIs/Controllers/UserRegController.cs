@@ -10,7 +10,6 @@ namespace ProjectAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class UserRegController : ControllerBase
     {
         IUserRegService _IUserRegService;
@@ -21,6 +20,7 @@ namespace ProjectAPI.Controllers
 
         [HttpPost]
         [Route("SaveUser")]
+        [Authorize]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> SaveUser([FromForm] VMUserReg vMUserReg)
         {
@@ -50,6 +50,7 @@ namespace ProjectAPI.Controllers
         }
 
         [HttpGet("GetAllUsers")]
+        [Authorize]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _IUserRegService.GetAllUsers();

@@ -8,8 +8,7 @@ using Portfolio_APIs.ViewModel;
 namespace Portfolio_APIs.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    [Authorize]
+    [ApiController] 
     public class EducationController : ControllerBase
     {
         IEducationService _IEducationService;
@@ -19,6 +18,7 @@ namespace Portfolio_APIs.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("SaveEducationInfo")]
         public async Task<IActionResult> SaveEducationInfo([FromBody] VMEducation vMEducation)
         {
@@ -52,11 +52,27 @@ namespace Portfolio_APIs.Controllers
         }
 
         [HttpGet("GetEducation")]
-        public async Task<IActionResult> GetEducationById([FromQuery] int? educationId = null)
+        public async Task<IActionResult> GetEducationById([FromQuery] int? educationId = null, [FromQuery] int? userId = null)
         {
-            int userId = Convert.ToInt32(User.FindFirst("userId")?.Value);
+            int finalUserId;
 
-            var result = await _IEducationService.GetEducationByIdAsync(educationId, userId);
+            // Case 1: Authorized request → get userId from JWT
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                finalUserId = Convert.ToInt32(User.FindFirst("userId")?.Value);
+            }
+            // Case 2: Unauthorized request → get userId from query param
+            else if (userId.HasValue)
+            {
+                finalUserId = userId.Value;
+            }
+            // Case 3: Neither JWT nor userId provided
+            else
+            {
+                return BadRequest(new { Message = "userId is required." });
+            }
+
+            var result = await _IEducationService.GetEducationByIdAsync(educationId, finalUserId);
 
             if (result == null)
                 return NotFound(new { Message = "Education record not found." });
@@ -65,12 +81,27 @@ namespace Portfolio_APIs.Controllers
         }
 
         [HttpGet("GetSkills")]
-        public async Task<IActionResult> GetSkillsByUserId()
+        public async Task<IActionResult> GetSkillsByUserId([FromQuery] int? userId = null)
         {
-            // Get UserId from JWT claims
-            int userId = Convert.ToInt32(User.FindFirst("userId")?.Value);
+            int finalUserId;
 
-            var skills = await _IEducationService.GetSkillsByIdAsync(userId);
+            // Case 1: Authorized request → get userId from JWT
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                finalUserId = Convert.ToInt32(User.FindFirst("userId")?.Value);
+            }
+            // Case 2: Unauthorized request → get userId from query param
+            else if (userId.HasValue)
+            {
+                finalUserId = userId.Value;
+            }
+            // Case 3: Neither JWT nor userId provided
+            else
+            {
+                return BadRequest(new { Message = "userId is required." });
+            }
+
+            var skills = await _IEducationService.GetSkillsByIdAsync(finalUserId);
 
             if (skills == null || skills.Count == 0)
                 return Ok(new List<VMSkill>());
@@ -79,6 +110,7 @@ namespace Portfolio_APIs.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("DeleteEducation")]
         public async Task<IActionResult> DeleteEducation([FromQuery] int educationId)
         { 
@@ -106,6 +138,7 @@ namespace Portfolio_APIs.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("SaveSkillInfo")]
         public async Task<IActionResult> SaveSkillInfo([FromBody] VMSkill vMSkill)
         {
@@ -138,6 +171,7 @@ namespace Portfolio_APIs.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("DeleteSkill")]
         public async Task<IActionResult> DeleteSkill([FromQuery] int skillId)
         {
