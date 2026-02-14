@@ -57,13 +57,30 @@ namespace ProjectAPI.Controllers
             return Ok(users);
         }
 
-        [HttpGet("GetUserById/{userId}")]
-        public async Task<IActionResult> GetUserById(int userId)
+        [HttpGet("GetUserById")]
+        public async Task<IActionResult> GetUserById([FromQuery] int? userId = null)
         {
+            int finalUserId;
+
+            // Case 1: Authorized request → get userId from JWT
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                finalUserId = Convert.ToInt32(User.FindFirst("userId")?.Value);
+            }
+            // Case 2: Unauthorized request → get userId from query param
+            else if (userId.HasValue)
+            {
+                finalUserId = userId.Value;
+            }
+            // Case 3: Neither JWT nor userId provided
+            else
+            {
+                return BadRequest(new { Message = "userId is required." });
+            }
             VMUserRegOperations vMUserReg = new VMUserRegOperations();
             try
             {
-                vMUserReg = await _IUserRegService.GetUsersById(userId);
+                vMUserReg = await _IUserRegService.GetUsersById(finalUserId);
             }
             catch (Exception)
             {
