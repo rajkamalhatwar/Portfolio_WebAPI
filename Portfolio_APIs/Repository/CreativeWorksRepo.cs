@@ -224,7 +224,8 @@ namespace Portfolio_APIs.Repository
                         Tags = row["Tags"].ToString()!,
                         ImageURL = row["ImageURL"].ToString()!,
                         WorkCategoryId = Convert.ToInt32(row["WorkCategoryId"]), 
-                        UserId = Convert.ToInt32(row["UserId"])
+                        UserId = Convert.ToInt32(row["UserId"]),
+                        CategoryName = row["CategoryName"].ToString()!
                     });
                 }
             }

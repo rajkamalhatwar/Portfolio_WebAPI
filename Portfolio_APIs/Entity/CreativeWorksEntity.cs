@@ -11,6 +11,7 @@
         public string? RelativeURL { get; set; }
         public int WorkCategoryId { get; set; }
         public int UserId { get; set; }
+        public string? CategoryName { get; set; }
     }
 
     public class WorkCatogoryEntity

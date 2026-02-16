@@ -94,7 +94,7 @@ namespace Portfolio_APIs.Services
             if (creativeWorks == null || creativeWorks.Count == 0)
                 return new List<VMCreativeWork>();
 
-            // Map Entity → ViewModel (same style as GetAllUsers)
+            // Map Entity → ViewModel  
             var creativeWorksVMs = creativeWorks.Select(e => new VMCreativeWork
             {
                 Id = e.Id,
@@ -103,7 +103,8 @@ namespace Portfolio_APIs.Services
                 Tags = e.Tags,
                 ImageURL = e.ImageURL,
                 WorkCategoryId = e.WorkCategoryId,
-                UserId = e.UserId  
+                UserId = e.UserId,
+                CategoryName = e.CategoryName
             }).ToList();
 
             return creativeWorksVMs;
