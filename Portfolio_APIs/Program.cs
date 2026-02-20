@@ -52,7 +52,8 @@ builder.Services.AddCors(options =>
                 "http://localhost:5174", // Vite (React)
                 "http://localhost:5173", // Vite (React)
                 "http://localhost:5175", // Vite (React)
-                "https://portfolio-admin-panel-xtal.onrender.com"
+                "https://portfolio-admin-panel-xtal.onrender.com",
+                "https://rajkamalhatwar.netlify.app"
             )
             .AllowAnyHeader()     // allow all headers
             .AllowAnyMethod();    // allow GET, POST, etc.
